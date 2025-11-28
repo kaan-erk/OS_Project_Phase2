@@ -126,7 +126,7 @@ void *dot_worker(void *arg) {
     {
         Cp[i][j] += A[i][k] * B[k][j];
     }
-    sleep(100);
+    sleep(5);
     pthread_exit(NULL);
 }
 
