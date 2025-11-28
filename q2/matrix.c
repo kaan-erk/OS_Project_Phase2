@@ -65,28 +65,50 @@ void initialize_matrix() {
 }
 
 // Save data in a file
-void save_matrix() {
+void save_matrix(double ts, double tp) {
     // Write the C matrix result into a file matrixC.txt as this format
     // 58    64
     // 139  154-
     // TODO
-    FILE *file = fopen("matrixC.txt", "w");  // matrixC.txt dosyasını yazma modunda aç
+    FILE *f1 = fopen("matrixC.txt", "w");
+    FILE *f2 = fopen("serial.txt", "w");
+    FILE *f3 = fopen("parallel.txt", "w");
 
-    if (file == NULL) {
-        printf("Error opening file for writing!\n");
+    if (!f1 || !f2 || !f3) {
+        printf("Error opening output files!\n");
         return;
     }
 
-    // Cp matrisini dosyaya yaz
     for (int i = 0; i < ROW_A; i++) {
         for (int j = 0; j < COL_B; j++) {
-            fprintf(file, "%d ", Cp[i][j]);  // Her elemanı yaz
+            fprintf(f1, "%d ", Cp[i][j]);
         }
-        fprintf(file, "\n");  // Her satır sonunda yeni satıra geç
+        fprintf(f1, "\n");
     }
 
-    fclose(file);  // Dosyayı kapat
-    printf("Matrix C saved to matrixC.txt\n");
+    fprintf(f2, "=== SERIAL RESULT ===\n");
+    for (int i = 0; i < ROW_A; i++) {
+        for (int j = 0; j < COL_B; j++) {
+            fprintf(f2, "%d ", Cs[i][j]);
+        }
+        fprintf(f2, "\n");
+    }
+    fprintf(f2, "\nExecution Time: %f seconds\n", ts);
+
+    fprintf(f3, "=== PARALLEL RESULT ===\n");
+    for (int i = 0; i < ROW_A; i++) {
+        for (int j = 0; j < COL_B; j++) {
+            fprintf(f3, "%d ", Cp[i][j]);
+        }
+        fprintf(f3, "\n");
+    }
+    fprintf(f3, "\nExecution Time: %f seconds\n", tp);
+
+    fclose(f1);
+    fclose(f2);
+    fclose(f3);
+
+    printf("Files saved: matrixC.txt, serial.txt, parallel.txt\n");
 }
 // Function to print a matrix
 void print_matrix(int rows, int cols, int **matrix) {
@@ -177,7 +199,7 @@ int main() {
     printf("Multithreaded dot product Matrix C:\n");
     print_matrix(ROW_A, COL_B, Cp);
     printf("Multithreaded dot product time: %f seconds\n", tp);
-    save_matrix();
+    save_matrix(ts, tp);
 
     return 0;
 }

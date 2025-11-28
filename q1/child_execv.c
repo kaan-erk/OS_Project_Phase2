@@ -19,6 +19,9 @@ int main()
         execv("/home/kaan/Desktop/OS/q1/myprogram", args);
     }
     else 
+    {
         wait(&status);
+        printf("Child process finished execution.\n");
+    }
     return (0);
 }
